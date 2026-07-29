@@ -2,6 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import sqlite3
+import os
+
+# Ensure outputs folder exists
+os.makedirs("outputs", exist_ok=True)
 
 conn = sqlite3.connect('database/stocks.db')
 
@@ -13,7 +17,7 @@ plt.rcParams['figure.figsize'] = (14, 7)  # default chart size
 # ============================================================
 # CHART 1: Price Trends (Line Chart)
 # ============================================================
-stocks = ['reliance', 'tcs', 'hdfc_bank', 'infosys']
+stocks = ['reliance', 'tcs', 'hdfc', 'infosys']
 colors = ['#e63946', '#457b9d', '#2a9d8f', '#e9c46a']
 
 fig, ax = plt.subplots()
@@ -37,12 +41,12 @@ print("Chart 1 saved.")
 # ============================================================
 fig, ax = plt.subplots()
 
-for stock, color in zip(stocks + ['nifty50'], colors + ['#6c757d']):
+for stock, color in zip(stocks + ['nifty_50'], colors + ['#6c757d']):
     df = pd.read_sql(f"SELECT date, close FROM {stock} ORDER BY date", conn)
     df['date'] = pd.to_datetime(df['date'])
     df['growth'] = 10000 * (1 + df['close'].pct_change()).cumprod()
     
-    linestyle = '--' if stock == 'nifty50' else '-'
+    linestyle = '--' if stock == 'nifty_50' else '-'
     ax.plot(df['date'], df['growth'], label=stock.upper(),
             color=color, linewidth=1.8, linestyle=linestyle)
 
