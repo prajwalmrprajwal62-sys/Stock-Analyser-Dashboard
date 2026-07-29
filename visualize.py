@@ -62,6 +62,30 @@ plt.show()
 # ============================================================
 # CHART 3: Monthly Return Heatmap (seaborn)
 # ============================================================
+df_r = pd.read_sql("SELECT date, daily_return_pct FROM hdfc", conn)
+df_r['date'] = pd.to_datetime(df_r['date'])
+df_r['month'] = df_r['date'].dt.month_name().str[:3]  # Jan, Feb, Mar...
+df_r['year'] = df_r['date'].dt.year
+
+# Pivot: rows=year, columns=month, values=avg return
+pivot = df_r.groupby(['year', 'month'])['daily_return_pct'].mean().unstack()
+
+# Reorder months correctly (Jan → Dec)
+month_order = ['Jan','Feb','Mar','Apr','May','Jun',
+               'Jul','Aug','Sep','Oct','Nov','Dec']
+pivot = pivot.reindex(columns=month_order)
+
+fig, ax = plt.subplots(figsize=(14, 4))
+sns.heatmap(pivot, annot=True, fmt='.2f', cmap='RdYlGn',
+            center=0, ax=ax, linewidths=0.5)
+ax.set_title('HDFC: Average Daily Return % by Month-Year', fontsize=14)
+plt.tight_layout()
+plt.savefig('outputs/03_monthly_heatmap.png', dpi=150)
+plt.show()
+
+# ============================================================
+# CHART 4: Monthly Return Heatmap (seaborn)
+# ============================================================
 df_r = pd.read_sql("SELECT date, daily_return_pct FROM reliance", conn)
 df_r['date'] = pd.to_datetime(df_r['date'])
 df_r['month'] = df_r['date'].dt.month_name().str[:3]  # Jan, Feb, Mar...
@@ -80,7 +104,7 @@ sns.heatmap(pivot, annot=True, fmt='.2f', cmap='RdYlGn',
             center=0, ax=ax, linewidths=0.5)
 ax.set_title('Reliance: Average Daily Return % by Month-Year', fontsize=14)
 plt.tight_layout()
-plt.savefig('outputs/03_monthly_heatmap.png', dpi=150)
+plt.savefig('outputs/04_monthly_heatmap.png', dpi=150)
 plt.show()
 
 conn.close()
