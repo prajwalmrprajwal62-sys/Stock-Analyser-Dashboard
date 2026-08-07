@@ -93,7 +93,7 @@ finance_dashboard/
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/finance-dashboard.git
+git clone https://github.com/prajwalmrprajwal62-sys/Stock-Analyser-Dashboard.git
 cd finance-dashboard
 
 # 2. Install dependencies
