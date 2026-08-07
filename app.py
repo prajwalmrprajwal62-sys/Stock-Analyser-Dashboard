@@ -47,9 +47,14 @@ def load_all_stock_data():
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.get_level_values(0)
 
+        # Convert the datetime index to a regular date column
+        if isinstance(df.index, pd.DatetimeIndex):
+            df = df.rename_axis('date').reset_index()
+        else:
+            df = df.reset_index()
+
         # Standardize column names
         df.columns = [col.lower().replace(' ', '_') for col in df.columns]
-        df = df.reset_index()
         df['date'] = pd.to_datetime(df['date'])
         df = df.sort_values('date').reset_index(drop=True)
 
@@ -298,6 +303,7 @@ if 'Reliance' in data:
 # ============================================================
 st.markdown("---")
 st.markdown(
-    "Built by **Prajwal M R** | CSBS, Dr. Ambedkar Institute of Technology | "
-    "[GitHub](https://github.com/YOUR_USERNAME)"
+    # REPLACE WITH:
+"Built by **Prajwal M R** | CSBS, Dr. Ambedkar Institute of Technology | "
+    "[GitHub](https://github.com/prajwalmrprajwal62-sys)"
 )
